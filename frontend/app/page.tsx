@@ -329,6 +329,7 @@ export default function Home() {
               src="/usagi-outline.png"
               alt="Usagi"
               fill
+              sizes="(max-width: 768px) 144px, (max-width: 1024px) 224px, 288px"
               className="object-contain drop-shadow-xl"
             />
             {/* Speech Bubble for Usagi */}
@@ -385,6 +386,7 @@ export default function Home() {
               src="/neko-outline.png"
               alt="Neko"
               fill
+              sizes="(max-width: 768px) 144px, (max-width: 1024px) 224px, 288px"
               className="object-contain drop-shadow-xl"
             />
             {/* Speech Bubble for Neko */}
@@ -407,7 +409,7 @@ export default function Home() {
             transition={{ delay: 0.4 }}
             className="text-4xl md:text-6xl font-bold text-gray-800 mb-4 pt-64 md:pt-72 lg:pt-80 text-center"
           >
-            Welcome My<span className="relative inline-block h-[2em] w-[2.58em] align-middle -ml-1"><Image src="/Love.png" alt="Love" fill className="object-contain" /></span>
+            Welcome My<span className="relative inline-block h-[2em] w-[2.58em] align-middle -ml-1"><Image src="/Love.png" alt="Love" fill sizes="100px" className="object-contain" /></span>
           </motion.h1>
 
           <motion.p

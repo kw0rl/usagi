@@ -42,7 +42,7 @@ export default function Navigation() {
                 alt="BMO"
                 width={20}
                 height={20}
-                className="object-contain"
+                className="object-contain w-5 h-auto"
               />
             </motion.div>
             <span className="font-semibold text-gray-700 group-hover:text-rose-500 transition-colors hidden sm:inline">

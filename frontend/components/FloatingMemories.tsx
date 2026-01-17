@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 import Image from "next/image";
 import { Heart, X } from "lucide-react";
 
@@ -15,6 +15,8 @@ interface MemoryPhoto {
   rotation: number;
   scale: number;
   delay: number;
+  objectPosition?: string;
+  caption?: string;
 }
 
 const bunaPhotos: MemoryPhoto[] = [
@@ -25,6 +27,31 @@ const bunaPhotos: MemoryPhoto[] = [
   { id: 5, src: "/buna-5.jpeg", initialX: 5, initialY: 55, mobileX: 5, mobileY: 50, rotation: -5, scale: 1, delay: 0.4 },
   { id: 6, src: "/buna-6.jpeg", initialX: 45, initialY: 75, mobileX: 35, mobileY: 68, rotation: 4, scale: 0.95, delay: 0.5 },
   { id: 7, src: "/buna-7.jpeg", initialX: 80, initialY: 78, mobileX: 60, mobileY: 52, rotation: -6, scale: 1.02, delay: 0.6 },
+  { id: 8, src: "/buna-8.jpg", initialX: 18, initialY: 35, mobileX: 10, mobileY: 70, rotation: 3, scale: 0.92, delay: 0.7 },
+  { id: 9, src: "/buna-9.jpg", initialX: 55, initialY: 38, mobileX: 45, mobileY: 70, rotation: -4, scale: 0.98, delay: 0.8 },
+  { id: 10, src: "/buna-10.jpg", initialX: 8, initialY: 68, mobileX: 5, mobileY: 88, rotation: 6, scale: 0.88, delay: 0.9 },
+  { id: 11, src: "/buna-11.jpg", initialX: 72, initialY: 42, mobileX: 55, mobileY: 88, rotation: -5, scale: 0.94, delay: 1.0 },
+  { id: 12, src: "/buna-12.jpg", initialX: 28, initialY: 62, mobileX: 25, mobileY: 75, rotation: 2, scale: 0.9, delay: 1.1 },
+  { id: 13, src: "/buna-13.jpg", initialX: 60, initialY: 65, mobileX: 55, mobileY: 78, rotation: -3, scale: 0.96, delay: 1.2 },
+  { id: 14, src: "/buna-14.jpg", initialX: 85, initialY: 58, mobileX: 5, mobileY: 82, rotation: 4, scale: 0.86, delay: 1.3 },
+];
+
+// Azrul's photos - draggable like boyfriend's photos
+const azrulPhotos: MemoryPhoto[] = [
+  { id: 1, src: "/azrul-1.png", initialX: 5, initialY: 12, mobileX: 5, mobileY: 10, rotation: -6, scale: 0.9, delay: 0 },
+  { id: 2, src: "/azrul-2.jpg", initialX: 65, initialY: 10, mobileX: 55, mobileY: 10, rotation: 4, scale: 0.85, delay: 0.1 },
+  { id: 3, src: "/azrul-3.jpg", initialX: 35, initialY: 14, mobileX: 30, mobileY: 22, rotation: -2, scale: 0.92, delay: 0.15 },
+  { id: 4, src: "/azrul-4.jpg", initialX: 5, initialY: 32, mobileX: 5, mobileY: 32, rotation: 5, scale: 0.82, delay: 0.2 },
+  { id: 5, src: "/azrul-5.jpg", initialX: 50, initialY: 28, mobileX: 50, mobileY: 32, rotation: -4, scale: 0.9, delay: 0.25 },
+  { id: 6, src: "/azrul-6.jpeg", initialX: 75, initialY: 30, mobileX: 55, mobileY: 44, rotation: 6, scale: 0.88, delay: 0.3 },
+  { id: 7, src: "/azrul-7.jpg", initialX: 22, initialY: 35, mobileX: 25, mobileY: 44, rotation: -3, scale: 0.95, delay: 0.35 },
+  { id: 8, src: "/azrul-8.jpg", initialX: 8, initialY: 52, mobileX: 5, mobileY: 56, rotation: 3, scale: 0.84, delay: 0.4 },
+  { id: 9, src: "/azrul-9.jpg", initialX: 42, initialY: 48, mobileX: 35, mobileY: 56, rotation: -5, scale: 0.9, delay: 0.45 },
+  { id: 10, src: "/azrul-10.jpg", initialX: 72, initialY: 50, mobileX: 60, mobileY: 68, rotation: 4, scale: 0.86, delay: 0.5 },
+  { id: 11, src: "/azrul-11.jpg", initialX: 25, initialY: 62, mobileX: 20, mobileY: 68, rotation: -6, scale: 0.92, delay: 0.55 },
+  { id: 12, src: "/azrul-12.jpg", initialX: 55, initialY: 65, mobileX: 50, mobileY: 80, rotation: 2, scale: 0.8, delay: 0.6 },
+  { id: 13, src: "/azrul-13.jpg", initialX: 5, initialY: 72, mobileX: 5, mobileY: 80, rotation: -4, scale: 0.9, delay: 0.65, objectPosition: "top" },
+  { id: 14, src: "/azrul-14.jpg", initialX: 78, initialY: 70, mobileX: 55, mobileY: 92, rotation: 5, scale: 0.85, delay: 0.7, caption: "the waist you gonna hold" },
 ];
 
 interface DraggablePhotoProps {
@@ -161,7 +188,9 @@ function DraggablePhoto({ photo, onSelect, containerRef, isMobile }: DraggablePh
               src={photo.src}
               alt={`Buna memory ${photo.id}`}
               fill
+              sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 176px"
               className="object-cover"
+              style={{ objectPosition: photo.objectPosition || "center" }}
               draggable={false}
             />
             
@@ -227,14 +256,16 @@ function PhotoModal({ photo, onClose }: { photo: MemoryPhoto | null; onClose: ()
             src={photo.src}
             alt={`Buna memory ${photo.id}`}
             fill
+            sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, 384px"
             className="object-cover"
+            style={{ objectPosition: photo.objectPosition || "center" }}
           />
         </div>
 
         <div className="mt-3 text-center">
           <p className="text-pink-600 font-medium flex items-center justify-center gap-2">
             <Heart size={16} fill="currentColor" />
-            Memory #{photo.id}
+            {photo.caption || `Memory #${photo.id}`}
             <Heart size={16} fill="currentColor" />
           </p>
         </div>
@@ -261,9 +292,9 @@ export default function FloatingMemories() {
   }, []);
 
   return (
-    <>
+    <div className="relative">
       {/* Floating cloud background decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
         {isMounted && [...Array(6)].map((_, i) => (
           <motion.div
             key={i}
@@ -294,7 +325,7 @@ export default function FloatingMemories() {
       {/* Main floating memories container */}
       <div 
         ref={containerRef}
-        className="relative w-full h-[900px] sm:h-[800px] md:h-[850px]"
+        className="relative w-full min-h-[1400px] sm:min-h-[1200px] md:min-h-[1000px] overflow-visible"
       >
         {/* Title */}
         <motion.div
@@ -304,11 +335,9 @@ export default function FloatingMemories() {
           className="absolute top-4 sm:top-16 md:top-28 left-1/2 -translate-x-1/2 z-10"
         >
           <h2 className="text-2xl sm:text-3xl font-bold text-pink-600 flex items-center gap-2">
-            <span>☁️</span>
             <span className="bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent">
               My Handsome
             </span>
-            <span>☁️</span>
           </h2>
           <p className="text-center text-pink-400 text-sm mt-1">
              drag the photos around! 
@@ -356,10 +385,72 @@ export default function FloatingMemories() {
         ))}
       </div>
 
+      {/* Your Usagi Section - Azrul's Photos */}
+      <div 
+        className="relative w-full min-h-[1400px] sm:min-h-[1200px] md:min-h-[1000px] overflow-visible"
+      >
+        {/* Title */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="absolute top-4 sm:top-8 left-1/2 -translate-x-1/2 z-10"
+        >
+          <h2 className="text-2xl sm:text-3xl font-bold text-pink-600 flex items-center gap-2">
+            <span className="bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent">
+              azrulchan
+            </span>
+          </h2>
+          <p className="text-center text-pink-400 text-sm mt-1">
+             drag the photos around! 
+          </p>
+        </motion.div>
+
+        {/* Draggable photos - Azrul */}
+        {azrulPhotos.map((photo) => (
+          <DraggablePhoto
+            key={`azrul-${photo.id}`}
+            photo={photo}
+            onSelect={setSelectedPhoto}
+            containerRef={containerRef as React.RefObject<HTMLDivElement>}
+            isMobile={isMobile}
+          />
+        ))}
+
+        {/* Floating decorative hearts */}
+        {[...Array(10)].map((_, i) => (
+          <motion.div
+            key={`heart-azrul-${i}`}
+            initial={{ opacity: 0 }}
+            animate={{
+              y: [0, -15, 0],
+              opacity: [0.2, 0.5, 0.2],
+              scale: [1, 1.15, 1],
+            }}
+            transition={{
+              duration: 3.5 + i * 0.4,
+              repeat: Infinity,
+              delay: i * 0.3,
+            }}
+            className="absolute pointer-events-none"
+            style={{
+              left: `${8 + i * 9}%`,
+              top: `${15 + (i % 4) * 22}%`,
+            }}
+          >
+            <Heart 
+              size={10 + (i % 3) * 3} 
+              className="text-rose-300/40" 
+              fill="currentColor" 
+            />
+          </motion.div>
+        ))}
+      </div>
+
       {/* Photo modal */}
       {selectedPhoto && (
         <PhotoModal photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
       )}
-    </>
+    </div>
   );
 }
