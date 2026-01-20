@@ -340,7 +340,7 @@ export default function FloatingMemories() {
             </span>
           </h2>
           <p className="text-center text-pink-400 text-sm mt-1">
-             drag the photos around! 
+             this town is fake but you're the real thing 
           </p>
         </motion.div>
 
@@ -402,7 +402,7 @@ export default function FloatingMemories() {
             </span>
           </h2>
           <p className="text-center text-pink-400 text-sm mt-1">
-             drag the photos around! 
+             i'm his waifu after all 
           </p>
         </motion.div>
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Caveat } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import LovePopup from "@/components/LovePopup";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${caveat.variable} antialiased font-sans overflow-x-hidden`}
       >
+        <LovePopup />
         <Navigation />
         <main className="overflow-x-hidden">
           {children}
